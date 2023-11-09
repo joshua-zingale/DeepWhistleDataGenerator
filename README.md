@@ -7,10 +7,10 @@ This makes use of [silbidopy](https://github.com/joshua-zingale/silbidopy), whic
 
 You can call the data generator with the following:
 ```bash
-python generate_traindata.py --audio_dir PATH_TO_AUDIO_FILES  \ 
+python generate_images.py --audio_dir PATH_TO_AUDIO_FILES  \ 
   --annotation_dir PATH_TO_ANNOTATION_FILES --output_dir PATH_TO_OUTPUT_SPECTROGRAM
 ```
 There are also more parameters that may be inspected with
 ```bash
-python generate_traindata.py -h
+python generate_images.py -h
 ```
