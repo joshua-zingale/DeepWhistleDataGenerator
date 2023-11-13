@@ -71,8 +71,8 @@ def getSpectrogram(audioFile, frame_time_span = 8, step_time_span = 2, spec_clip
 
 
     # Flip spectrogram to match expectations for display
-    # and scall to be 0-255
-    spectrogram_flipped = spectogram[::-1, ] * 255
+    # and DO NOT scale to be 0-255
+    spectrogram_flipped = spectogram[::-1, ]
 
     actual_end_time = start_time + spectrogram_flipped.shape[1] * step_time_span
     return spectrogram_flipped, actual_end_time
@@ -170,8 +170,8 @@ def getAnnotationMask(annotations, frame_time_span = 8, step_time_span = 2,
             prev_freq_frame = freq_frame
     
     # Flip spectrogram to match expectations for display
-    # and scall to be 0-255
-    mask = mask[::-1, ] * 255
+    # and DO NOT scale to be 0-255
+    mask = mask[::-1, ]
 
     return mask, positive_flag
 
