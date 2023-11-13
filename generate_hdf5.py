@@ -59,8 +59,7 @@ def main():
 
     # collect all .wav filenames
     wav_names = list(map(os.path.basename, wav_files))
-    # if len(wav_files) == 1:
-    #     wav_names = [wav_names]
+
     wav_file_dict = {wav_names[i] : wav_files[i] for i in range(len(wav_names))}
 
     # collect all .bin files.
@@ -135,8 +134,6 @@ def main():
             # Shrink them to proper size
             spectrogram_block[block_idx] = spectrogram[:freq_patch_frames, :time_patch_frames]
             mask_block[block_idx] = mask[:freq_patch_frames, :time_patch_frames]
-                
-
 
             # Save block of patches to hdf5
             if (block_idx == patches_per_block - 1 or num_patches_processed == len(patches) - 1) and have_not_added_data:
@@ -150,7 +147,6 @@ def main():
 
                 h5f['label'].resize((h5f['label'].shape[0] + mask_block.shape[0]), axis=0)
                 h5f['label'][-mask_block.shape[0]:] = mask_block
-
 
             num_patches_processed += 1
 
