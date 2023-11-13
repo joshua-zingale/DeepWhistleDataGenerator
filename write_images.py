@@ -27,8 +27,8 @@ def write_images(audio_filename, binary_filename, output_dir, frame_time_span = 
         spec_im = Image.fromarray(spectrogram).convert("RGB").convert("P", palette=Image.ADAPTIVE, colors=8)
         mask_im = Image.fromarray(mask).convert("RGB").convert("P", palette=Image.ADAPTIVE, colors=8)
 
-        spec_im.save(output_dir + f"/{num_images}-a.png")
-        mask_im.save(output_dir + f"/{num_images}-b.png")
+        spec_im.save(output_dir + f"/{num_images}-spectogram.png")
+        mask_im.save(output_dir + f"/{num_images}-mask.png")
 
         num_images += 1
 
