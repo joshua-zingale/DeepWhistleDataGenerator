@@ -21,7 +21,7 @@ def write_images(audio_filename, binary_filename, output_dir, frame_time_span = 
         spectrogram, actual_end = getSpectrogram(wav, frame_time_span=frame_time_span,step_time_span=step_time_span,
                                      spec_clip_min=spec_clip_min, spec_clip_max=spec_clip_max, min_freq=min_freq,
                                      max_freq=max_freq, start_time=time, end_time=end_time)
-        mask = getAnnotationMask(contours, frame_time_span=frame_time_span,step_time_span=step_time_span,
+        mask, positive_flag = getAnnotationMask(contours, frame_time_span=frame_time_span,step_time_span=step_time_span,
                                  min_freq=min_freq, max_freq=max_freq, start_time=time, end_time=actual_end)
         
         spec_im = Image.fromarray(spectrogram).convert("RGB").convert("P", palette=Image.ADAPTIVE, colors=8)

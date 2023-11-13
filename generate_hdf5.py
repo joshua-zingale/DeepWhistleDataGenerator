@@ -87,6 +87,7 @@ def main():
     have_not_added_data = True
     spectrogram_block = np.zeros((patches_per_block, freq_patch_frames, time_patch_frames))
     mask_block = np.zeros((patches_per_block, freq_patch_frames, time_patch_frames))
+    positive_flag_block = np.zeros((patches_per_block))
     num_patches_processed = 0
     for i in range(0, len(anno_wav_filenames)):
         print('Processing audio file: %d/%d' % (i+1, len(anno_wav_filenames)))
@@ -127,18 +128,20 @@ def main():
             spectrogram, actual_end = getSpectrogram(wav, frame_time_span=frame_time_span,step_time_span=step_time_span,
                                         spec_clip_min=spec_clip_min, spec_clip_max=spec_clip_max, min_freq=start_freq,
                                         max_freq=end_freq, start_time=start_time, end_time=end_time)
-            mask = getAnnotationMask(contours, frame_time_span=frame_time_span,step_time_span=step_time_span,
-                                    min_freq=start_freq, max_freq=end_freq, start_time=start_time, end_time=end_time)
+            mask, positive_flag = getAnnotationMask(contours, frame_time_span=frame_time_span,step_time_span=step_time_span,
+                min_freq=start_freq, max_freq=end_freq, start_time=start_time, end_time=end_time)
 
             # Due to rounding, sometimes these are bigger than they should be.
             # Shrink them to proper size
             spectrogram_block[block_idx] = spectrogram[:freq_patch_frames, :time_patch_frames]
             mask_block[block_idx] = mask[:freq_patch_frames, :time_patch_frames]
+            positive_flag_block[block_idx] = 1.0 if positive_flag else 0.0
 
             # Save block of patches to hdf5
             if (block_idx == patches_per_block - 1 or num_patches_processed == len(patches) - 1) and have_not_added_data:
                 h5f.create_dataset('data', data=spectrogram_block[:block_idx], compression="gzip", chunks=True, maxshape=(None,freq_patch_frames,time_patch_frames))
                 h5f.create_dataset('label', data=mask_block[:block_idx], compression="gzip", chunks=True, maxshape=(None,freq_patch_frames,time_patch_frames))
+                h5f.create_dataset('positive_flag', data=positive_flag_block[:block_idx], compression="gzip", chunks=True, maxshape=(None,))
                 have_not_added_data = False
             elif block_idx == patches_per_block - 1 or num_patches_processed == len(patches) - 1:
                 # Append new data to the hdf5
@@ -147,6 +150,9 @@ def main():
 
                 h5f['label'].resize((h5f['label'].shape[0] + mask_block.shape[0]), axis=0)
                 h5f['label'][-mask_block.shape[0]:] = mask_block
+
+                h5f['positive_flag'].resize((h5f['label'].shape[0] + positive_flag_block.shape[0]), axis=0)
+                h5f['positive_flag'][-positive_flag_block.shape[0]:] = positive_flag_block
 
             num_patches_processed += 1
 

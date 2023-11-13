@@ -96,7 +96,7 @@ def getAnnotationMask(annotations, frame_time_span = 8, step_time_span = 2,
     :param start_time: ms, the beginning of where the audioFile is read
     :param end_time: ms, the end of where the audioFile is read. -1 reads until the end
 
-    :returns: the annotation mask 
+    :returns: (annotation mask, positive flag)
     '''
 
     
@@ -113,9 +113,11 @@ def getAnnotationMask(annotations, frame_time_span = 8, step_time_span = 2,
 
     annotations = annotations[low:high]
 
+    positive_flag = False
+
     # if no annotations to plot
     if (low >= high):
-         return mask
+         return mask, positive_flag
 
     freq_resolution = 1000 / frame_time_span
     time_span = (end_time - start_time)
@@ -162,6 +164,7 @@ def getAnnotationMask(annotations, frame_time_span = 8, step_time_span = 2,
                 
                 # Draw pixel
                 mask[round(current_freq), round(t)] = 1
+                positive_flag = True
 
             prev_time_frame = time_frame
             prev_freq_frame = freq_frame
@@ -170,7 +173,7 @@ def getAnnotationMask(annotations, frame_time_span = 8, step_time_span = 2,
     # and scall to be 0-255
     mask = mask[::-1, ] * 255
 
-    return mask
+    return mask, positive_flag
 
 
 
