@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# @Time    : 18-9-19 5:34 pm 
-# @Author  : Pu Li
-# @File    : generateSpectrogram.py
-
 import sys
 
 import os
