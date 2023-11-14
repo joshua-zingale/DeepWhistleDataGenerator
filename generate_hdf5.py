@@ -127,9 +127,9 @@ def main():
 
             # Save block of patches to hdf5
             if (block_idx == patches_per_block - 1 or num_patches_processed == len(patches) - 1) and have_not_added_data:
-                h5f.create_dataset('data', data=spectrogram_block[:block_idx], compression="gzip", chunks=True, maxshape=(None,freq_patch_frames,time_patch_frames))
-                h5f.create_dataset('label', data=mask_block[:block_idx], compression="gzip", chunks=True, maxshape=(None,freq_patch_frames,time_patch_frames))
-                h5f.create_dataset('positive_flag', data=positive_flag_block[:block_idx], compression="gzip", chunks=True, maxshape=(None,))
+                h5f.create_dataset('data', data=spectrogram_block[:block_idx+1], compression="gzip", chunks=True, maxshape=(None,freq_patch_frames,time_patch_frames))
+                h5f.create_dataset('label', data=mask_block[:block_idx+1], compression="gzip", chunks=True, maxshape=(None,freq_patch_frames,time_patch_frames))
+                h5f.create_dataset('positive_flag', data=positive_flag_block[:block_idx+1], compression="gzip", chunks=True, maxshape=(None,))
                 have_not_added_data = False
             elif block_idx == patches_per_block - 1 or num_patches_processed == len(patches) - 1:
                 # Append new data to the hdf5
@@ -139,7 +139,7 @@ def main():
                 h5f['label'].resize((h5f['label'].shape[0] + block_idx+1), axis=0)
                 h5f['label'][-(block_idx+1):] = mask_block[:block_idx+1]
 
-                h5f['positive_flag'].resize((h5f['label'].shape[0] + block_idx+1), axis=0)
+                h5f['positive_flag'].resize((h5f['positive_flag'].shape[0] + block_idx+1), axis=0)
                 h5f['positive_flag'][-(block_idx+1):] = positive_flag_block[:block_idx+1]
 
             num_patches_processed += 1
