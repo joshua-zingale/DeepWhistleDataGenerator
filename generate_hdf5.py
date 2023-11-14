@@ -133,14 +133,14 @@ def main():
                 have_not_added_data = False
             elif block_idx == patches_per_block - 1 or num_patches_processed == len(patches) - 1:
                 # Append new data to the hdf5
-                h5f['data'].resize((h5f['data'].shape[0] + spectrogram_block.shape[0]), axis=0)
-                h5f['data'][-spectrogram_block.shape[0]:] = spectrogram_block
+                h5f['data'].resize((h5f['data'].shape[0] + block_idx+1), axis=0)
+                h5f['data'][-(block_idx+1):] = spectrogram_block[:block_idx+1]
 
-                h5f['label'].resize((h5f['label'].shape[0] + mask_block.shape[0]), axis=0)
-                h5f['label'][-mask_block.shape[0]:] = mask_block
+                h5f['label'].resize((h5f['label'].shape[0] + block_idx+1), axis=0)
+                h5f['label'][-(block_idx+1):] = mask_block[:block_idx+1]
 
-                h5f['positive_flag'].resize((h5f['label'].shape[0] + positive_flag_block.shape[0]), axis=0)
-                h5f['positive_flag'][-positive_flag_block.shape[0]:] = positive_flag_block
+                h5f['positive_flag'].resize((h5f['label'].shape[0] + block_idx+1), axis=0)
+                h5f['positive_flag'][-(block_idx+1):] = positive_flag_block[:block_idx+1]
 
             num_patches_processed += 1
 
