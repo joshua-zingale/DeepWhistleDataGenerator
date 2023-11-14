@@ -119,10 +119,9 @@ def main():
             mask, positive_flag = getAnnotationMask(contours, frame_time_span=frame_time_span,step_time_span=step_time_span,
                 min_freq=start_freq, max_freq=end_freq, start_time=start_time, end_time=end_time)
 
-            # Due to rounding, sometimes these are bigger than they should be.
-            # Shrink them to proper size
-            spectrogram_block[block_idx] = spectrogram[:freq_patch_frames, :time_patch_frames]
-            mask_block[block_idx] = mask[:freq_patch_frames, :time_patch_frames]
+            # Save to block
+            spectrogram_block[block_idx] = spectrogram
+            mask_block[block_idx] = mask
             positive_flag_block[block_idx] = 1.0 if positive_flag else 0.0
 
             # Save block of patches to hdf5

@@ -63,7 +63,7 @@ def getSpectrogram(audioFile, frame_time_span = 8, step_time_span = 2, spec_clip
 
     # Include only the desired frequency range
     clip_bottom = int(min_freq // freq_resolution)
-    clip_top = int(max_freq // freq_resolution + 1) # TODO why + 1?
+    clip_top = int(max_freq // freq_resolution) 
     spectogram = singal_magspec.T[clip_bottom:clip_top]
     spectogram = np.log10(spectogram)
 
@@ -103,7 +103,7 @@ def getAnnotationMask(annotations, frame_time_span = 8, step_time_span = 2,
 
     # Get dimensions for mask
     image_width = int((end_time - start_time) / step_time_span)
-    image_height = int((max_freq - min_freq) * frame_time_span/1000 + 1) # TODO why + 1?
+    image_height = int((max_freq - min_freq) * frame_time_span/1000)
 
     mask = np.zeros((image_height, image_width))
 
