@@ -23,7 +23,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--audio_dir', type=str, required=True, help='the path containing .wav files')
     parser.add_argument('--annotation_dir', type=str, required=True, help='the path containing .bin files')
-    parser.add_argument('--output_dir', type=str, required=True, help='the path to output hdf5 files')
+    parser.add_argument('--output_file', type=str, required=True, help='The file path and name of the output hdf5 file')
 
     parser.add_argument('--frame_time_span', type=int, default=8, help='ms, length of time for one time window for dft')
     parser.add_argument('--step_time_span', type=int, default=2, help='ms, length of time step for spectrogram')
@@ -70,9 +70,6 @@ def main():
     anno_wav_filenames = list(map(wav2spec.bin2wav_filename, bin_files))
     anno_wav_files = [wav_file_dict[filename] for filename in anno_wav_filenames]
 
-    ### set output directory
-    wav2spec.check_dir(config.output_dir)
-
     # Useful values
     freq_resolution = 1000 / frame_time_span
     patch_freq_length_hz = freq_resolution * freq_patch_frames
@@ -83,11 +80,11 @@ def main():
     
 
     # Build hdf5 one wav file at a time
-    h5f = h5py.File(config.output_dir + "/pos.hdf5", 'w')
+    h5f = h5py.File(config.output_file, 'w')
     have_not_added_data = True
-    spectrogram_block = np.zeros((patches_per_block, freq_patch_frames, time_patch_frames))
-    mask_block = np.zeros((patches_per_block, freq_patch_frames, time_patch_frames))
-    positive_flag_block = np.zeros((patches_per_block))
+    spectrogram_block = np.zeros((patches_per_block, freq_patch_frames, time_patch_frames), dtype="f4")
+    mask_block = np.zeros((patches_per_block, freq_patch_frames, time_patch_frames), dtype="f4")
+    positive_flag_block = np.zeros((patches_per_block), dtype="f4")
     num_patches_processed = 0
     for i in range(0, len(anno_wav_filenames)):
         print('Processing audio file: %d/%d' % (i+1, len(anno_wav_filenames)))
@@ -97,10 +94,6 @@ def main():
 
         wav = wavio.read(wav_file)
         contours = tonalReader(bin_files[i]).getTimeFrequencyContours()
-
-        output_dir = config.output_dir + '/' + wav_filename
-        wav2spec.check_dir(output_dir)
-
     
         # Length in ms
         audio_file_length = wav.data.shape[0] / wav.rate * 1000
