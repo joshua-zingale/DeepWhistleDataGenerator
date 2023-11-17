@@ -51,8 +51,6 @@ def main():
 
     # collect all .wav files
     wav_files = wav2spec.find_wav_files(config.audio_dir)
-    print(len(wav_files))
-    input("Waiting...")
 
     # collect all .wav filenames
     wav_names = list(map(os.path.basename, wav_files))
@@ -62,8 +60,6 @@ def main():
     # collect all .bin files.
     exp_group = os.path.basename(config.annotation_dir)
     bin_files = wav2spec.findfiles(config.annotation_dir, fnmatchex='*.bin')
-    print(len(bin_files))
-    input("Waiting...")
 
     # find all .wav files that have corresponding .bin files.
     anno_wav_filenames = list(map(wav2spec.bin2wav_filename, bin_files))
@@ -88,15 +84,14 @@ def main():
     mask_block = np.zeros((patches_per_block, freq_patch_frames, time_patch_frames), dtype="f4")
     positive_flag_block = np.zeros((patches_per_block), dtype="f4")
     num_patches_processed = 0
-    for i in range(4, len(anno_wav_filenames)):
+    for i in range(0, len(anno_wav_filenames)):
         print('Processing audio file: %d/%d "%s"' % (i+1, len(anno_wav_filenames), anno_wav_filenames[i]))
         wav_file = anno_wav_files[i]
         wav_filename = os.path.basename(wav_file)
         wav_filename = wav_filename.split('.wav')[0]
 
-        print(anno_wav_files[i])
         wav = wavio.read(wav_file)
-        print("file ", wav)
+
         contours = tonalReader(bin_files[i]).getTimeFrequencyContours()
     
         # Length in ms
