@@ -1,5 +1,5 @@
 import numpy as np
-from silbidopy.sigproc import magspec, framesig
+from silbidopy.sigproc import magspec, frame_signal
 import wavio
 import math
 
@@ -43,16 +43,16 @@ def getSpectrogram(audioFile, frame_time_span = 8, step_time_span = 2, spec_clip
     # #
 
     start_frame = int(start_time / 1000 * wav_data.rate)
-    end_frame = int((end_time / 1000 + 1 / freq_resolution - step_time_span / 1000)* wav_data.rate)
+    end_frame = int((end_time / 1000 + frame_time_span / 1000 - step_time_span / 1000)* wav_data.rate)
 
-    frame_sample_span = int(math.floor(frame_time_span / 1000 * wav_data.rate) + 1)
-    step_sample_span = int(math.floor(step_time_span / 1000 * wav_data.rate))
+    frame_sample_span = int(math.floor(frame_time_span / 1000 * wav_data.rate))
+    step_sample_span = step_time_span / 1000 * wav_data.rate
     # No frames if the audio file is too short
     if wav_data.data[start_frame:end_frame].shape[0] < frame_sample_span:
         frames = []
     else:
-        frames = framesig(wav_data.data.ravel()[start_frame:end_frame], frame_sample_span, step_sample_span)
-
+        frames = frame_signal(wav_data.data.ravel()[start_frame:end_frame], frame_sample_span, step_sample_span)
+    
     # #
     # Make spectrogram
     # #
