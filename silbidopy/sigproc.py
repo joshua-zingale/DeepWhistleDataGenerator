@@ -1,10 +1,8 @@
 # This file includes routines for basic signal processing including framing and computing power spectra.
 # Author: James Lyons 2012
 # Edited by Joshua Zingale 2023
-import decimal
 
 import numpy as np
-import math
 import logging
 
 def frame_signal(signal, frame_len: int, frame_step: float):
